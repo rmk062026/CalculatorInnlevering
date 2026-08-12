@@ -1,4 +1,6 @@
-﻿namespace CalculatorInnlevering;
+﻿using System.IO.Pipelines;
+
+namespace CalculatorInnlevering;
 
 class Program
 {
@@ -17,8 +19,44 @@ class Program
             {
                 if (menuInput == 1)
                 {
-                    // Calculator.Calculator();
-                    Console.WriteLine("Calculator will be here.. TODO");
+                    Console.WriteLine("Please enter you first number:");
+                    int firstNumbersInput = int.Parse(Console.ReadLine() ?? "");
+
+                    Console.WriteLine("Please enter operator you want to use:");
+                    string operatorInput = Console.ReadLine() ?? "";
+
+                    Console.WriteLine("Please enter your second number:");
+                    int secoundNumberInput = int.Parse(Console.ReadLine() ?? "");
+
+                    double result = 0;
+
+                    if (operatorInput == "+")
+                    {
+                        result = firstNumbersInput + secoundNumberInput;
+                    }
+                    else if (operatorInput == "-")
+                    {
+                        result = firstNumbersInput - secoundNumberInput;
+                    }
+                    else if (operatorInput == "*")
+                    {
+                        result = firstNumbersInput * secoundNumberInput;
+                    }
+                    else if (operatorInput == "/")
+                    {
+                        result = firstNumbersInput / secoundNumberInput;
+                    }
+                    else if (operatorInput == "%")
+                    {
+                        result = firstNumbersInput % secoundNumberInput;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Must enter a valid operator...");
+                    }
+                    Console.WriteLine($"Result: {firstNumbersInput} {operatorInput} {secoundNumberInput} = {result}");
+                    Console.WriteLine("Press a button...");
+                    Console.ReadKey();
                 }
                 else if (menuInput == 2)
                 {
