@@ -1,77 +1,129 @@
-﻿using System.IO.Pipelines;
-
-namespace CalculatorInnlevering;
+﻿namespace CalculatorInnlevering;
 
 class Program
 {
     static void Main(string[] args)
     {
+        Calculator calculator = new Calculator();
         bool calculatorRunning = true;
+
         Console.WriteLine("Calculator");
+
         while (calculatorRunning)
         {
             Console.WriteLine("Week3 calculator menu");
-            Console.WriteLine("1. New calculations");
+            Console.WriteLine("1. New calculation");
             Console.WriteLine("2. Exit");
-            Console.WriteLine("Velg enten 1 eler 2:");
+            Console.WriteLine("Velg enten 1 eller 2:");
 
             if (int.TryParse(Console.ReadLine(), out int menuInput))
             {
                 if (menuInput == 1)
                 {
-                    Console.WriteLine("Please enter you first number:");
-                    int firstNumbersInput = int.Parse(Console.ReadLine() ?? "");
+                    Console.WriteLine("Enter calculation:");
+                    Console.WriteLine("Example: '10 + 15 + 30'");
 
-                    Console.WriteLine("Please enter operator you want to use:");
-                    string operatorInput = Console.ReadLine() ?? "";
+                    string input = Console.ReadLine() ?? "";
 
-                    Console.WriteLine("Please enter your second number:");
-                    int secoundNumberInput = int.Parse(Console.ReadLine() ?? "");
+                    input = input
+                    .Replace("+", " + ")
+                    .Replace("-", " - ")
+                    .Replace("*", " * ")
+                    .Replace("/", " / ")
+                    .Replace("%", " % ");
 
-                    double result = 0;
+                    string[] parts = input.Split(
+                        ' ',
+                        StringSplitOptions.RemoveEmptyEntries
+                    );
+                    bool validInput = true;
 
-                    if (operatorInput == "+")
+                    List<double> numbers = new List<double>();
+                    string operatorInput = "";
+
+                    foreach (string part in parts)
                     {
-                        result = firstNumbersInput + secoundNumberInput;
+                        if (double.TryParse(part, out double number))
+                        {
+                            numbers.Add(number);
+                        }
+                        else if (
+                            part == "+" ||
+                            part == "-" ||
+                            part == "*" ||
+                            part == "/" ||
+                            part == "%"
+                        )
+                        {
+                            if (operatorInput == "")
+                            {
+                                operatorInput = part;
+                            }
+                            else if (operatorInput != part)
+                            {
+                                Console.WriteLine("You must use the same operator for the entire calculation.");
+
+                                validInput = false;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Invalid input: {part}");
+                            validInput = false;
+                        }
                     }
-                    else if (operatorInput == "-")
+
+                    if (numbers.Count < 2)
                     {
-                        result = firstNumbersInput - secoundNumberInput;
+                        Console.WriteLine("You must enter at least two numbers.");
+                        validInput = false;
                     }
-                    else if (operatorInput == "*")
+
+                    if (operatorInput == "")
                     {
-                        result = firstNumbersInput * secoundNumberInput;
+                        Console.WriteLine("You must enter an operator.");
+                        validInput = false;
                     }
-                    else if (operatorInput == "/")
+
+                    if (validInput)
                     {
-                        result = firstNumbersInput / secoundNumberInput;
+                        double result;
+
+                        if (numbers.Count == 2)
+                        {
+                            result = calculator.Calculate(
+                                numbers[0],
+                                numbers[1],
+                                operatorInput
+                            );
+                        }
+                        else
+                        {
+                            result = calculator.Calculate(
+                                numbers,
+                                operatorInput
+                            );
+                        }
+
+                        Console.WriteLine($"Result: {result}");
+                        Console.WriteLine("Press a button...");
+                        Console.ReadKey();
                     }
-                    else if (operatorInput == "%")
-                    {
-                        result = firstNumbersInput % secoundNumberInput;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Must enter a valid operator...");
-                    }
-                    Console.WriteLine($"Result: {firstNumbersInput} {operatorInput} {secoundNumberInput} = {result}");
-                    Console.WriteLine("Press a button...");
-                    Console.ReadKey();
                 }
                 else if (menuInput == 2)
                 {
                     calculatorRunning = false;
-                    break;
                 }
                 else
                 {
-                    Console.WriteLine("Must enter 1 or 2....");
+                    Console.WriteLine("You must choose 1 or 2.");
                 }
             }
             else
             {
-                Console.WriteLine("Must enter a number...");
+                Console.WriteLine("You must enter a number.");
             }
+
         }
     }
 }
