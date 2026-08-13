@@ -20,4 +20,4 @@ Denne kalkulatoren ble laget for å lære om method overloading, bruker inpus, p
 
 ## Flowchart
 
-![Flowchart viser program flow](docs/calculator-flowchart.png)
+![Flowchart viser program flow](docs/calculator.drawio.png)
